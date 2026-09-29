@@ -1,0 +1,56 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}编辑 IVDC 配置指导 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC">IVDC</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC/config-guide">配置指导</a> <span>/</span>
+    <strong>编辑</strong>
+{% endblock %}
+
+{% block page_title %}编辑 IVDC 配置指导{% endblock %}
+{% block page_lede %}逐 step 编辑，支持字体大小、颜色、加粗、列表{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <div id="sections-container" class="overview-list">
+        {% for sec in sections %}
+        <div class="card section-block">
+            <div class="form-row">
+                <label for="heading_{{ loop.index0 }}">步骤标题</label>
+                <input type="text" id="heading_{{ loop.index0 }}" name="heading_{{ loop.index0 }}" value="{{ sec.heading }}">
+            </div>
+            <div class="form-row">
+                <label for="content_{{ loop.index0 }}">正文内容（HTML）</label>
+                <div class="rt-toolbar" data-target="content_{{ loop.index0 }}">
+                    <select class="rt-fontsize" aria-label="字体大小">
+                        <option value="">字体大小</option>
+                        <option value="13px">小</option>
+                        <option value="15px" selected>中</option>
+                        <option value="18px">大</option>
+                    </select>
+                    <input type="color" class="rt-color" value="#1f2329" title="文字颜色" aria-label="文字颜色">
+                    <button type="button" class="rt-bold" title="加粗"><b>B</b></button>
+                    <button type="button" class="rt-tag" data-tag="p" title="段落">段落</button>
+                    <button type="button" class="rt-tag" data-tag="ul" title="无序列表">无序</button>
+                    <button type="button" class="rt-tag" data-tag="ol" title="有序列表">有序</button>
+                    <button type="button" class="rt-tag" data-tag="li" title="列表项">列表项</button>
+                </div>
+                <textarea id="content_{{ loop.index0 }}" name="content_{{ loop.index0 }}" rows="5" class="mono">{{ sec.content }}</textarea>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">保存全部</button>
+        <a class="btn" href="{{ base }}/chips/{{ chip }}/IVDC/config-guide">取消</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ base }}/static/js/rich-text.js"></script>
+{% endblock %}

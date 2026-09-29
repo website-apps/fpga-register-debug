@@ -1,0 +1,21 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}{{ module }} 配置检查 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}">{{ module }}</a> <span>/</span>
+    <strong>配置检查</strong>
+{% endblock %}
+
+{% block page_title %}{{ module }} 配置检查{% endblock %}
+{% block page_actions %}
+    <span class="status-pill warn">待建设</span>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p class="empty-state">配置检查功能将在后续讨论后开发。</p>
+</div>
+{% endblock %}

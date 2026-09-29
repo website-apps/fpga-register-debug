@@ -1,0 +1,30 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}功能介绍 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <strong>功能介绍</strong>
+{% endblock %}
+
+{% block page_title %}功能介绍{% endblock %}
+{% block page_lede %}请选择您的角色以查看对应的使用说明{% endblock %}
+
+{% block content %}
+<div class="portal-card-grid-dark">
+    <a href="{{ base }}/intro/product" class="portal-glass-card">
+        <span class="card-mark">产品</span>
+        <h3>产品人员</h3>
+        <p>了解寄存器 debug 工具如何辅助问题初步排查与客户沟通</p>
+    </a>
+    <a href="{{ base }}/intro/software" class="portal-glass-card">
+        <span class="card-mark">软件</span>
+        <h3>软件人员</h3>
+        <p>掌握寄存器解析、多 dump 对比与异常筛查的完整流程</p>
+    </a>
+    <a href="{{ base }}/intro/hardware" class="portal-glass-card">
+        <span class="card-mark">验证</span>
+        <h3>设计与验证人员</h3>
+        <p>学习如何录入寄存器定义、配置比特字段与正常期望值</p>
+    </a>
+</div>
+{% endblock %}

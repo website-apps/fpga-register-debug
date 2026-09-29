@@ -1,0 +1,184 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}{{ chip }} / {{ module }} 寄存器解析 · IPT 寄存器 debug 小帮手{% endblock %}
+{% block body_modifier %} wide{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}">{{ module }}</a> <span>/</span>
+    <strong>寄存器自动解析</strong>
+{% endblock %}
+
+{% block page_title %}寄存器自动解析{% endblock %}
+{% block page_lede %}上传 FPGA dump 文件，按寄存器定义逐 bit 解析并标记异常{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+    <span class="debug-module-badge">{{ module }}</span>
+{% endblock %}
+
+{% block content %}
+<section class="debug-card">
+    <h2>1. 寄存器定义管理</h2>
+    <hr class="debug-divider">
+    <div class="debug-toolbar">
+        <button id="btn-add-register" class="debug-btn debug-btn-primary">添加寄存器</button>
+        <button id="btn-show-json-example" class="debug-btn">查看 JSON 示例</button>
+        <button id="btn-import-regdef" class="debug-btn">导入 JSON</button>
+        <input type="file" id="input-regdef-file" accept=".json" hidden>
+        {% if module != 'IVDC' %}
+        <select id="select-module" class="debug-select" aria-label="选择模块查看">
+            <option value="">-- 选择模块查看 --</option>
+        </select>
+        {% endif %}
+        <input type="search" id="regdef-search" class="result-search" placeholder="搜索地址或关键字…" aria-label="搜索寄存器定义">
+        <button id="btn-regdef-search" class="debug-btn btn-sm">搜索</button>
+    </div>
+    <div id="regdef-table-container" class="debug-table-wrap">
+        <table id="regdef-table" class="debug-table">
+            <thead>
+                <tr>
+                    <th>寄存器名</th>
+                    <th>地址偏移</th>
+                    <th>Bit 范围</th>
+                    <th>字段名</th>
+                    <th>正常值</th>
+                    <th>异常值</th>
+                    <th>枚举映射</th>
+                    <th>更新人</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+
+<section class="debug-card">
+    <h2>2. FPGA Dump 文件解析</h2>
+    <hr class="debug-divider">
+    <div class="debug-toolbar">
+        <label class="debug-file-label">
+            选择 Dump 文件
+            <input type="file" id="input-dump-files" accept=".txt,.log" multiple hidden>
+        </label>
+        <span id="dump-files-info" class="debug-file-info">未选择文件</span>
+        <button id="btn-parse" class="debug-btn debug-btn-primary">开始解析</button>
+        <button id="btn-export-all" class="debug-btn debug-btn-success" disabled>导出完整结果</button>
+        <button id="btn-export-defined" class="debug-btn debug-btn-success" disabled>导出已定义</button>
+        <button id="btn-export-abnormal" class="debug-btn debug-btn-danger" disabled>导出异常点</button>
+    </div>
+</section>
+
+<div class="debug-card" id="result-section" style="display:none;">
+    <h2>3. 解析结果</h2>
+    <hr class="debug-divider">
+
+    <div id="section-abnormal">
+        <div class="debug-section-title abnormal">3.1 疑似异常点</div>
+        <div class="debug-summary" id="abnormal-summary"></div>
+        <div class="debug-toolbar">
+            <input type="search" class="result-search" placeholder="搜索地址或关键字…" data-target="abnormal" aria-label="搜索疑似异常点">
+        </div>
+        <div class="debug-table-wrap">
+            <table id="abnormal-table" class="debug-table">
+                <thead id="abnormal-table-head"></thead>
+                <tbody id="abnormal-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <hr class="debug-divider">
+
+    <div id="section-defined">
+        <div class="debug-section-title defined">3.2 已定义的寄存器</div>
+        <div class="debug-summary" id="defined-summary"></div>
+        <div class="debug-toolbar">
+            <input type="search" class="result-search" placeholder="搜索地址或关键字…" data-target="defined" aria-label="搜索已定义寄存器">
+        </div>
+        <div class="debug-table-wrap">
+            <table id="defined-table" class="debug-table">
+                <thead id="defined-table-head"></thead>
+                <tbody id="defined-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <hr class="debug-divider">
+
+    <div id="section-all">
+        <div class="debug-section-title all">3.3 全部寄存器</div>
+        <div class="debug-summary" id="all-summary"></div>
+        <div class="debug-toolbar">
+            <input type="search" class="result-search" placeholder="搜索地址或关键字…" data-target="all" aria-label="搜索全部寄存器">
+        </div>
+        <div class="debug-table-wrap">
+            <table id="result-table" class="debug-table">
+                <thead id="result-table-head"></thead>
+                <tbody id="result-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="debug-modal-overlay" id="modal-json-example" style="display:none;">
+    <div class="debug-modal">
+        <div class="debug-modal-header">
+            <span>寄存器定义 JSON 示例</span>
+            <button class="debug-btn-close" id="btn-json-example-close" aria-label="关闭">&times;</button>
+        </div>
+        <div class="debug-modal-body">
+            <p class="field-hint">以下为单个模块的寄存器定义 JSON 格式示例，可复制到本地编辑后通过「导入 JSON」上传。</p>
+            <pre id="json-example-content" class="debug-pre"></pre>
+        </div>
+        <div class="debug-modal-footer">
+            <button id="btn-copy-json" class="debug-btn debug-btn-primary">复制到剪贴板</button>
+            <button id="btn-json-example-cancel" class="debug-btn">关闭</button>
+        </div>
+    </div>
+</div>
+
+<div class="debug-modal-overlay" id="modal-register" style="display:none;">
+    <div class="debug-modal">
+        <div class="debug-modal-header">
+            <span>新增寄存器</span>
+            <button class="debug-btn-close" id="btn-modal-close" aria-label="关闭">&times;</button>
+        </div>
+        <div class="debug-modal-body">
+            <div class="debug-form-row">
+                <label class="debug-form-label-req" for="reg-module-name">模块名字</label>
+                <input type="text" id="reg-module-name" placeholder="例如: IVDC" list="module-datalist">
+                <datalist id="module-datalist"></datalist>
+            </div>
+            <div class="debug-form-row">
+                <label class="debug-form-label-req" for="reg-name">寄存器名字</label>
+                <input type="text" id="reg-name" placeholder="例如: CTRL_REG">
+            </div>
+            <div class="debug-form-row">
+                <label class="debug-form-label-req" for="reg-address">地址偏移</label>
+                <input type="text" id="reg-address" placeholder="例如: 0x13100224">
+            </div>
+            <div class="debug-form-row">
+                <label class="debug-form-label-req">Bit 字段定义</label>
+                <div id="bitfield-rows"></div>
+                <button id="btn-add-bitfield" class="debug-btn btn-sm">添加 Bit 字段</button>
+            </div>
+        </div>
+        <div class="debug-modal-footer">
+            <button id="btn-save-register" class="debug-btn debug-btn-primary">保存</button>
+            <button id="btn-cancel-register" class="debug-btn">取消</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.APP_CONFIG = {
+        base: "{{ base }}",
+        chip: "{{ chip }}",
+        module: "{{ module }}",
+        can_edit: {{ 'true' if can_edit else 'false' }},
+        user_name: "{{ user.name }}"
+    };
+</script>
+<script src="{{ base }}/static/js/main.js?v=20260819"></script>
+{% endblock %}

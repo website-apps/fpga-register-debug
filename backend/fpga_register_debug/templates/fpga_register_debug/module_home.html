@@ -1,0 +1,38 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}{{ chip }} / {{ module }} · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <strong>{{ module }}</strong>
+{% endblock %}
+
+{% block page_title %}{{ module }} 模块功能{% endblock %}
+{% block page_lede %}请选择要使用的功能{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+    <span class="debug-module-badge">{{ module }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="portal-card-grid-dark">
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}/info" class="portal-glass-card card-{{ module|lower }}">
+        <span class="card-mark">说明</span>
+        <h3>{{ module }} 模块说明</h3>
+        <p>查看模块功能介绍与寄存器概述</p>
+    </a>
+    {% if module == 'IVDC' %}
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}/config" class="portal-glass-card card-ivdc">
+        <span class="card-mark">配置</span>
+        <h3>IVDC 配置</h3>
+        <p>寄存器配置指导与配置检查</p>
+    </a>
+    {% endif %}
+    <a href="{{ base }}/debug/{{ chip }}/{{ module }}" class="portal-glass-card card-{{ module|lower }}">
+        <span class="card-mark">解析</span>
+        <h3>{{ module }} 寄存器 Debug 分析</h3>
+        <p>上传 dump 文件，解析寄存器值并导出报告</p>
+    </a>
+</div>
+{% endblock %}

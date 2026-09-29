@@ -1,0 +1,38 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}{{ chip }} 模块选择 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <strong>{{ chip }}</strong>
+{% endblock %}
+
+{% block page_title %}{{ chip }} 模块选择{% endblock %}
+{% block page_lede %}请选择要进入的功能模块{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="portal-card-grid-dark">
+    <a href="{{ base }}/chips/{{ chip }}/ISP" class="portal-glass-card card-isp">
+        <span class="card-mark">ISP</span>
+        <h3>ISP</h3>
+        <p>图像信号处理模块</p>
+    </a>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC" class="portal-glass-card card-ivdc">
+        <span class="card-mark">IVDC</span>
+        <h3>IVDC</h3>
+        <p>桥接 ISP 与 VPU 模块</p>
+    </a>
+    <a href="{{ base }}/chips/{{ chip }}/VPU" class="portal-glass-card card-vpu">
+        <span class="card-mark">VPU</span>
+        <h3>VPU</h3>
+        <p>视频处理单元</p>
+    </a>
+</div>
+
+{% if modules %}
+<p class="field-hint">已有寄存器定义的模块：{{ modules|join('、') }}</p>
+{% endif %}
+{% endblock %}

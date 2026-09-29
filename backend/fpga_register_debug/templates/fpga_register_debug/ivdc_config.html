@@ -1,0 +1,31 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}IVDC 配置 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC">IVDC</a> <span>/</span>
+    <strong>IVDC 配置</strong>
+{% endblock %}
+
+{% block page_title %}IVDC 配置{% endblock %}
+{% block page_lede %}请选择要使用的配置功能{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="portal-card-grid-dark">
+    <a href="{{ base }}/chips/{{ chip }}/IVDC/config-guide" class="portal-glass-card card-ivdc">
+        <span class="card-mark">指导</span>
+        <h3>IVDC 配置指导</h3>
+        <p>查看寄存器配置流程与步骤说明</p>
+    </a>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC/config-check" class="portal-glass-card card-ivdc">
+        <span class="card-mark">检查</span>
+        <h3>IVDC 配置检查</h3>
+        <p>检查寄存器配置是否符合正常/异常值</p>
+    </a>
+</div>
+{% endblock %}

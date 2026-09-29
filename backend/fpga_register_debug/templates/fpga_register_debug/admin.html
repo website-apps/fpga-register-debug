@@ -1,0 +1,138 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}用户审核管理 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <strong>用户审核管理</strong>
+{% endblock %}
+
+{% block page_title %}用户审核管理{% endblock %}
+{% block page_lede %}{% if total_pending %}待处理 {{ total_pending }} 项{% else %}暂无待处理事项{% endif %}{% endblock %}
+{% block page_actions %}
+    {% if total_pending %}
+    <span class="status-pill danger">{{ total_pending }} 待处理</span>
+    {% else %}
+    <span class="status-pill">已清空</span>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if get_flashed_messages() %}
+<div class="alert success">{{ get_flashed_messages()[0] }}</div>
+{% endif %}
+
+<section class="card">
+    <h2>待审核用户{% if pending %}（{{ pending|length }} 人）{% endif %}</h2>
+    <hr class="debug-divider">
+    {% if pending %}
+    <div class="debug-table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>岗位</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in pending %}
+                <tr>
+                    <td><strong>{{ u.name }}</strong></td>
+                    <td>{{ role_map.get(u.role, u.role) }}</td>
+                    <td>{{ u.created_at }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="{{ base }}/admin/approve/{{ u.id }}">通过</a>
+                        <a class="btn btn-sm btn-danger" href="{{ base }}/admin/reject/{{ u.id }}">拒绝</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">暂无待审核用户。</p>
+    {% endif %}
+</section>
+
+{% if reset_requests %}
+<section class="card">
+    <h2>密码重置申请（{{ reset_requests|length }} 项）</h2>
+    <hr class="debug-divider">
+    <div class="debug-table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>申请时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reset_requests %}
+                <tr>
+                    <td><strong>{{ r.name }}</strong></td>
+                    <td>{{ r.created_at }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="{{ base }}/admin/approve_reset/{{ r.id }}">通过</a>
+                        <a class="btn btn-sm btn-danger" href="{{ base }}/admin/reject_reset/{{ r.id }}">拒绝</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<section class="card">
+    <h2>所有用户（{{ all_users|length }} 人）</h2>
+    <hr class="debug-divider">
+    <div class="debug-toolbar">
+        <input type="search" id="user-search" class="result-search" placeholder="搜索姓名或岗位…" aria-label="搜索用户">
+    </div>
+    <div class="debug-table-wrap table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>岗位</th>
+                    <th>状态</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="all-users-tbody">
+                {% for u in all_users %}
+                <tr data-search="{{ u.name }} {{ role_map.get(u.role, u.role) }}">
+                    <td><strong>{{ u.name }}</strong></td>
+                    <td>{{ role_map.get(u.role, u.role) }}</td>
+                    <td>
+                        {% if u.status == 'approved' %}<span class="status-pill">已通过</span>
+                        {% elif u.status == 'pending' %}<span class="status-pill warn">待审核</span>
+                        {% else %}<span class="status-pill danger">已拒绝</span>{% endif %}
+                    </td>
+                    <td>{{ u.created_at }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-danger" href="{{ base }}/admin/delete/{{ u.id }}"
+                           onclick="return confirm('确认删除用户「{{ u.name }}」？此操作不可恢复。')">删除</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById("user-search").addEventListener("input", function () {
+        const keyword = this.value.trim().toLowerCase();
+        document.querySelectorAll("#all-users-tbody tr").forEach((row) => {
+            const text = (row.dataset.search || "").toLowerCase();
+            row.style.display = !keyword || text.includes(keyword) ? "" : "none";
+        });
+    });
+</script>
+{% endblock %}

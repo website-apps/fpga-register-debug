@@ -1,0 +1,51 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}注册 · IPT 寄存器 debug 小帮手{% endblock %}
+{% block body_modifier %} narrow{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-intro">
+        <h1>IPT 寄存器 debug 小帮手</h1>
+        <p>ISP / IVDC / VPU 寄存器自动解析与异常筛查</p>
+    </div>
+
+    <div class="auth-card">
+        <h2>注册新账号</h2>
+
+        {% if get_flashed_messages() %}
+        <div class="alert">{{ get_flashed_messages()[0] }}</div>
+        {% endif %}
+
+        {% if success_msg %}
+        <div class="alert success">{{ success_msg }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ base }}/register">
+            <div class="form-row">
+                <label class="debug-form-label-req" for="reg-name">姓名</label>
+                <input type="text" id="reg-name" name="name" required autofocus placeholder="请输入您的真实姓名（登录用）">
+            </div>
+            <div class="form-row">
+                <label class="debug-form-label-req" for="reg-role">岗位</label>
+                <select id="reg-role" name="role" required>
+                    <option value="">-- 请选择岗位 --</option>
+                    <option value="product">产品人员</option>
+                    <option value="software">软件人员</option>
+                    <option value="hardware">IC设计/验证</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label class="debug-form-label-req" for="reg-password">密码</label>
+                <input type="password" id="reg-password" name="password" required placeholder="至少 6 位密码">
+            </div>
+            <div class="form-row">
+                <label class="debug-form-label-req" for="reg-password2">确认密码</label>
+                <input type="password" id="reg-password2" name="password2" required placeholder="再次输入密码">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+        </form>
+
+        <p class="auth-links">注册后需管理员审核通过才能登录。已有账号？<a href="{{ base }}/login">返回登录</a></p>
+    </div>
+</section>
+{% endblock %}

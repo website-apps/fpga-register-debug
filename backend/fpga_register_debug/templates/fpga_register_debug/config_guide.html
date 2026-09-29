@@ -1,0 +1,40 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}IVDC 配置指导 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/IVDC">IVDC</a> <span>/</span>
+    <strong>配置指导</strong>
+{% endblock %}
+
+{% block page_title %}IVDC 寄存器配置指导{% endblock %}
+{% block page_lede %}§1.5.3 寄存器配置流程，按步骤分段展示{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+    {% if is_admin %}
+    <a class="btn btn-sm" href="{{ base }}/chips/{{ chip }}/IVDC/config-guide/edit">编辑</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<article class="doc-section-dark guide-figure">
+    <h2>IVDC 寄存器配置流程图</h2>
+    <img src="{{ base }}/static/images/ivdc/IPT_T42_IVDC_SPEC_CN(1)_html_912fc9ea5f14ebd.gif"
+         alt="IVDC 寄存器配置流程图">
+</article>
+
+{% for sec in sections %}
+<article class="doc-section-dark" id="step-{{ sec.heading }}">
+    <h2>{{ sec.heading }}</h2>
+    <div class="doc-body">{{ sec.content | safe }}</div>
+</article>
+{% endfor %}
+
+{% if not sections %}
+<div class="card">
+    <p class="empty-state">暂无配置指导内容。</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{# 整站导航，与主站 App.tsx 的 .top-nav 保持一致。
+   本应用自己的登录态放在 _layout.html 的 .app-bar 里，不要混进来。 #}
+<header class="top-nav">
+    <a class="nav-brand" href="{{ site_home_url }}" aria-label="LobsterAI 君正龙虾">
+        <img class="nav-logo" src="{{ base }}/static/images/logo.png" alt="LobsterAI 君正龙虾">
+        <span class="nav-brand-text">LobsterAI 君正龙虾</span>
+    </a>
+
+    <nav class="nav-utility" aria-label="站点导航">
+        <a class="nav-link active" href="/apps">AI 应用</a>
+        <a class="nav-link" href="/apply">API Key/用量查询</a>
+        <a class="nav-link" href="{{ report_site_url }}">工作报告</a>
+        <a class="nav-link" href="/docs/" target="_blank" rel="noopener noreferrer">文档中心</a>
+    </nav>
+</header>

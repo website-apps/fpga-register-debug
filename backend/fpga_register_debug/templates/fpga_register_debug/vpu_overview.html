@@ -1,0 +1,48 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}{{ module }} 模块说明 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}">{{ module }}</a> <span>/</span>
+    <strong>模块说明</strong>
+{% endblock %}
+
+{% block page_title %}{{ module }} 模块说明{% endblock %}
+{% block page_lede %}{{ chip }} {{ module }} 各子模块功能概述{% endblock %}
+{% block page_actions %}
+    <span class="chip-badge">{{ chip }}</span>
+    {% if can_edit_vpu %}
+    <a class="btn btn-sm" href="{{ base }}/chips/{{ chip }}/{{ module }}/info/edit">编辑</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if overviews %}
+<div class="overview-list">
+    {% for mod, info in overviews.items() %}
+    {% set desc = info.desc if info is mapping else info %}
+    {% set updated_by = info.updated_by if info is mapping else "" %}
+    {% set updated_at = info.updated_at if info is mapping else "" %}
+    <article class="overview-item">
+        <div class="overview-head">
+            <h2>{{ mod }}</h2>
+            <span class="status-pill">{{ registers_count.get(mod, 0) }} 个寄存器</span>
+            <span class="overview-meta">
+                更新人：{{ updated_by or '-' }}{% if updated_at %} · {{ updated_at }}{% endif %}
+                {% if can_edit_vpu %}
+                <a class="btn btn-sm" href="{{ base }}/chips/{{ chip }}/{{ module }}/info/edit?mod={{ mod }}">编辑</a>
+                {% endif %}
+            </span>
+        </div>
+        <p>{{ desc }}</p>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <p class="empty-state">暂无模块说明数据。</p>
+</div>
+{% endif %}
+{% endblock %}

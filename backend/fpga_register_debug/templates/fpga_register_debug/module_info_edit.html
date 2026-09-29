@@ -1,0 +1,46 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}编辑 {{ module }} 模块说明 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/chips">芯片选择</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}">{{ chip }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}">{{ module }}</a> <span>/</span>
+    <a href="{{ base }}/chips/{{ chip }}/{{ module }}/info">模块说明</a> <span>/</span>
+    <strong>编辑</strong>
+{% endblock %}
+
+{% block page_title %}编辑 {{ module }} 模块说明{% endblock %}
+{% block page_lede %}支持 HTML：字体大小、颜色、加粗、列表等{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="POST">
+        <div class="rt-toolbar" data-target="content-editor">
+            <select class="rt-fontsize" aria-label="字体大小">
+                <option value="">字体大小</option>
+                <option value="13px">小</option>
+                <option value="15px" selected>中</option>
+                <option value="18px">大</option>
+            </select>
+            <input type="color" class="rt-color" value="#1f2329" title="文字颜色" aria-label="文字颜色">
+            <button type="button" class="rt-bold" title="加粗"><b>B</b></button>
+            <button type="button" class="rt-tag" data-tag="p" title="段落">段落</button>
+            <button type="button" class="rt-tag" data-tag="ul" title="无序列表">无序</button>
+            <button type="button" class="rt-tag" data-tag="ol" title="有序列表">有序</button>
+            <button type="button" class="rt-tag" data-tag="li" title="列表项">列表项</button>
+        </div>
+        <textarea name="content" id="content-editor" rows="20" class="mono">{{ modinfo_html }}</textarea>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <a class="btn" href="{{ base }}/chips/{{ chip }}/{{ module }}/info">取消</a>
+            <span class="field-hint">可直接编辑 HTML 源码，或选中文字后使用上方工具栏。</span>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ base }}/static/js/rich-text.js"></script>
+{% endblock %}

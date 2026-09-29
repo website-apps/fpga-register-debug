@@ -1,0 +1,31 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block page_kicker %}FPGA Verification{% endblock %}
+{% block page_title %}IPT 寄存器 debug 小帮手{% endblock %}
+{% block page_lede %}ISP / IVDC / VPU 寄存器自动解析与异常筛查{% endblock %}
+
+{% block content %}
+<div class="landing-cards">
+    <a href="{{ base }}/intro" class="landing-card">
+        <span class="card-mark">指南</span>
+        <h3>功能介绍</h3>
+        <p>了解工具能力与使用流程</p>
+    </a>
+    <a href="{{ base }}/chips" class="landing-card">
+        <span class="card-mark">芯片</span>
+        <h3>芯片类型</h3>
+        <p>选择芯片进入寄存器分析</p>
+    </a>
+    {% if is_admin %}
+    <a href="{{ base }}/admin" class="landing-card">
+        <span class="card-mark">审核</span>
+        <h3>
+            审核管理
+            {% if pending_count %}<span class="status-pill danger">{{ pending_count }} 待处理</span>{% endif %}
+        </h3>
+        <p>审核新注册用户与密码重置申请</p>
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

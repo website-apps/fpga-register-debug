@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IPT 寄存器 debug 小帮手{% endblock %} · LobsterAI</title>
+    <link rel="stylesheet" href="{{ base }}/static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="app-shell">
+        {% include "fpga_register_debug/_nav.html" %}
+
+        <main class="page-body{% block body_modifier %}{% endblock %}">
+            <nav class="breadcrumb" aria-label="当前位置">
+                <a href="/apps">AI 应用</a> <span>/</span>
+                {% if self.breadcrumb()|trim %}
+                <a href="{{ base }}/">IPT 寄存器 debug 小帮手</a>
+                {% block breadcrumb %}{% endblock %}
+                {% else %}
+                <strong>IPT 寄存器 debug 小帮手</strong>
+                {% endif %}
+            </nav>
+
+            {% if self.page_title()|trim %}
+            {# 页头：左侧标题，右侧本应用的登录态与页面操作，共用底部分隔线 #}
+            <header class="page-head">
+                <div class="page-head-copy">
+                    {% if self.page_kicker()|trim %}
+                    <p class="page-kicker">{% block page_kicker %}{% endblock %}</p>
+                    {% endif %}
+                    <h1>{% block page_title %}{% endblock %}</h1>
+                    {% if self.page_lede()|trim %}
+                    <p class="page-lede">{% block page_lede %}{% endblock %}</p>
+                    {% endif %}
+                </div>
+
+                <div class="page-head-aside">
+                    {% if user and user.name %}
+                    <div class="page-head-session">
+                        <span class="app-user-badge">
+                            <span class="dot" aria-hidden="true">●</span>
+                            {{ user.name }}
+                            <span class="app-user-role">{{ role_labels.get(user.role, user.role) }}</span>
+                        </span>
+                        {% if is_admin %}
+                        <a class="app-bar-link" href="{{ base }}/admin">
+                            审核管理
+                            {% if pending_count %}<span class="app-bar-count">{{ pending_count }}</span>{% endif %}
+                        </a>
+                        {% endif %}
+                        <a class="app-bar-link" href="{{ base }}/logout">退出</a>
+                    </div>
+                    {% endif %}
+
+                    {% if self.page_actions()|trim %}
+                    <div class="page-head-actions">{% block page_actions %}{% endblock %}</div>
+                    {% endif %}
+                </div>
+            </header>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

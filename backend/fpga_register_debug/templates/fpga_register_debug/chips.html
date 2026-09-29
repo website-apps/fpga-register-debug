@@ -1,0 +1,25 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}芯片选择 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <strong>芯片选择</strong>
+{% endblock %}
+
+{% block page_title %}选择芯片类型{% endblock %}
+{% block page_lede %}选择芯片后进入对应模块的寄存器分析页面{% endblock %}
+{% block page_actions %}
+    <span class="status-pill">{{ chips|length }} 款芯片</span>
+{% endblock %}
+
+{% block content %}
+<div class="portal-chip-grid-dark">
+    {% for chip_name, modules in chips.items() %}
+    <a href="{{ base }}/chips/{{ chip_name }}" class="portal-chip-card-dark">
+        <span class="card-mark">芯片</span>
+        <h3>{{ chip_name }}</h3>
+        <p>{{ modules|join(' · ') }}</p>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

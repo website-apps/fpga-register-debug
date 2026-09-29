@@ -1,0 +1,56 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}编辑 {{ role_label }} 介绍 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/intro">功能介绍</a> <span>/</span>
+    <strong>编辑 {{ role_label }}</strong>
+{% endblock %}
+
+{% block page_title %}编辑 {{ role_label }} 介绍{% endblock %}
+{% block page_lede %}支持字体大小、颜色、加粗；修改后点击保存{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form method="POST" id="edit-form">
+        <div class="form-row">
+            <label for="page-title">页面标题</label>
+            <input type="text" id="page-title" name="title" value="{{ content.title }}">
+        </div>
+
+        <div id="sections-container">
+            {% for sec in content.sections %}
+            <div class="section-block">
+                <div class="form-row">
+                    <label for="heading_{{ loop.index0 }}">段落标题</label>
+                    <input type="text" id="heading_{{ loop.index0 }}" name="heading_{{ loop.index0 }}" value="{{ sec.heading }}">
+                </div>
+                <div class="form-row">
+                    <label for="content_{{ loop.index0 }}">正文</label>
+                    <div class="rt-toolbar" data-target="content_{{ loop.index0 }}">
+                        <select class="rt-fontsize" aria-label="字体大小">
+                            <option value="">字体大小</option>
+                            <option value="13px">小</option>
+                            <option value="15px" selected>中</option>
+                            <option value="18px">大</option>
+                        </select>
+                        <input type="color" class="rt-color" value="#1f2329" title="文字颜色" aria-label="文字颜色">
+                        <button type="button" class="rt-bold" title="加粗"><b>B</b></button>
+                    </div>
+                    <textarea id="content_{{ loop.index0 }}" name="content_{{ loop.index0 }}" rows="6">{{ sec.content }}</textarea>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <a class="btn" href="{{ base }}/intro/{{ role }}">取消</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ base }}/static/js/rich-text.js"></script>
+{% endblock %}

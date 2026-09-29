@@ -1,0 +1,39 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}登录 · IPT 寄存器 debug 小帮手{% endblock %}
+{% block body_modifier %} narrow{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-intro">
+        <h1>IPT 寄存器 debug 小帮手</h1>
+        <p>ISP / IVDC / VPU 寄存器自动解析与异常筛查</p>
+    </div>
+
+    <div class="auth-card">
+        <h2>用户登录</h2>
+
+        {% if get_flashed_messages() %}
+        <div class="alert">{{ get_flashed_messages()[0] }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ base }}/login">
+            <div class="form-row">
+                <label for="login-name">姓名</label>
+                <input type="text" id="login-name" name="name" required autofocus placeholder="请输入您的姓名">
+            </div>
+            <div class="form-row">
+                <label for="login-password">密码</label>
+                <input type="password" id="login-password" name="password" required placeholder="请输入密码">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+        </form>
+
+        <p class="auth-links">
+            <a href="{{ base }}/reset-password">忘记密码</a>
+            <span class="auth-sep">|</span>
+            <a href="{{ base }}/change-password">修改密码</a>
+        </p>
+        <p class="auth-links">还没有账号？<a href="{{ base }}/register">立即注册</a></p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "fpga_register_debug/_layout.html" %}
+{% block title %}产品人员 · IPT 寄存器 debug 小帮手{% endblock %}
+
+{% block breadcrumb %}
+    <span>/</span>
+    <a href="{{ base }}/intro">功能介绍</a> <span>/</span>
+    <strong>产品人员</strong>
+{% endblock %}
+
+{% block page_title %}{{ content.title }}{% endblock %}
+{% block page_actions %}
+    {% if is_admin %}
+    <a class="btn btn-sm" href="{{ base }}/intro/product/edit">编辑</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% for sec in content.sections %}
+<article class="doc-section-dark">
+    <h2>{{ sec.heading }}</h2>
+    <div class="doc-body">{{ sec.content | safe }}</div>
+</article>
+{% endfor %}
+{% endblock %}
